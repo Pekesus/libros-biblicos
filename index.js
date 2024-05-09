@@ -1,4 +1,5 @@
 //express
+const { json } = require('body-parser');
 const express = require('express'); //llamando a la libreria instalada
 const res = require('express/lib/response');
 const app = express(); //inicializando la libreria (express) 
@@ -6,9 +7,9 @@ const PORT = 3000; //asignando un puerto, puede cambiar si está en uso
 
 //array
 let librosbiblicos =[
-    {id: 1, nombre: 'Genesis', autor: 'Moises'},
-    {id: 2, nombre: 'Exodo', autor: 'Moises'},
-    {id: 3, nombre: 'Levitico', autor: 'Moises'},
+    {id: 1, nombre: 'Genesis', autor: 'Moises', anioPublicacion: 2020},
+    {id: 2, nombre: 'Exodo', autor: 'Moises', anioPublicacion: 2024},
+    {id: 3, nombre: 'Levitico', autor: 'Moises', anioPublicacion: 1990},
 ];
 //manejo de JSON
 app.use(express.json());
@@ -46,6 +47,23 @@ app.put('/actualizar-libro/:id', (req, res) => {
     }
     
     //console.log(libroEncontrado);
+});
+//endpoint 5 Eliminar libro
+app.delete('/eliminar-libro/:id',(req, res) => {
+    const id = parseInt(req.params.id);
+    lbiblico = librosbiblicos.filter( libro => libro.id !== id);
+    res.status(201).json({mensaje : 'Se ha eliminado el libro'});
+    console.log(lbiblico);
+});
+//endpoint 6 
+app.get('/libros/publicacion/:anio', (req, res) => {
+    const year = parseInt(req.params.anio);
+    const librosPublicados = librosbiblicos.filter( anio => anio.anioPublicacion === year);
+    if (librosPublicados.length > 0) {
+        res.json(librosPublicados);
+    } else {
+        res.status(404),json({mensaje : 'No se han encontrado libros publicados'});
+    }
 });
 
 app.listen(PORT, () => {
